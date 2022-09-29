@@ -21,12 +21,14 @@ const BookSchema = new Schema({
     isbn:{
         type: String,
         required: true,
+        // unique constrain does not allow duplicate values and should be set at the beginning
+        unique: [true, "ISBN must be unique"]
     },
     price: {
         type: Number,
         required: true,
         min: [0, 'Price should be greater than 0'],
-        max: ['$1000', 'Price should not exceed $1000']
+        max: [1000, 'Price should not exceed 1000']
     },
     createdAt:{
         type: Date,

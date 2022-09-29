@@ -16,7 +16,7 @@ bookRoute.get("/", (req, res)=>{
     ).catch(
         (err) =>{
             console.log(err)
-            res.status(500).send(err.message)
+            res.status(500).send(err)
         }
     )
 })
@@ -28,7 +28,20 @@ bookRoute.post("/", (req, res)=>{
 
     // add the book to the bookstore database
 
-    res.send(" Book successfully created")
+    bookModel.create(book2post)
+    .then(
+        (book2post) =>{
+            res.status(201).send({
+                message: "Book successfully created",
+                data: book2post
+            })
+        }
+    ).catch(
+        (err)=>{
+            res.status(404).send(err)
+        }
+    )
+    
 })
 
 // read a book by ID
@@ -37,29 +50,64 @@ bookRoute.get("/:id", (req, res)=>{
     console.log(book2read)
     // find and return this book by id
 
-    res.send("Book successfully displayed from its ID")
-
+    bookModel.findById(book2read)
+    .then(
+        (book)=>{
+            res.status(200).send({
+                message: " Book FOund",
+                data: book
+            })
+        }
+    ).catch(
+        (err)=>{
+        res.status(400).send(err) // note that we are supposed to determine the status through each error log dynamically
+        })
+   
 })
 
 // update a book by ID
 bookRoute.put("/:id", (req, res)=>{
     const book2Update = req.params.id
-    console.log("Updating book with " + book2Update)
+    const book = req.body
 
     // perform update to the database
+    // to update by id, we need the id variable, the body we want to make update and the new option to indicate that the new changes should be displayed
+    bookModel.findByIdAndUpdate(book2Update, book, {new: true})
+    .then(
+        (book)=>{
+            res.status(200).send({
+                message: " Book successfully Updated",
+                data: book
+            })
+        }
+    ).catch(
+        (err)=>{
+            res.status(400).send(err)
+        }
+    )
 
-    res.send("Book was successfully updated")
+   
 })
 
 // delete a book with ID using a route ID
 bookRoute.delete("/:id", (req, res)=>{
     const book2delete = req.params.id
-    console.log(`deleting book with ${book2delete}`)
 
     // perform delete operation to the database
 
-    res.send("Book was successfully deleted")
-})
+    bookModel.findByIdAndDelete(book2delete)
+    .then(
+        ()=>{
+            res.status(200).send({
+                message: " Book successfully deleted",
+                data: ""
+            })
+        }
+    ).catch(
+        (err)=>{
+            res.status(404).send(err)
+        })
+    })
 
 
 
