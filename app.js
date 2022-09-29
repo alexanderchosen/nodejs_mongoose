@@ -1,6 +1,7 @@
 // require both express and dotenv
 const express = require ("express")
 const { connectToMongoDb } = require("./db")
+const BookRoute = require ("./routes/book")
 require("dotenv").config()
 
 
@@ -16,6 +17,9 @@ connectToMongoDb()
 
 // express in-built body parser
 app.use(express.json())
+
+// to connect to the book route
+app.use("/books", BookRoute)
 
 // define our home route
 app.get("/", (req, res)=>{

@@ -10,7 +10,7 @@ function connectToMongoDb(){
 
     // event listener for mongoose both success and error logs
     mongoose.connection.on("connected", ()=>{
-        console.log("connection to mongoose successful")
+        console.log("connection to mongoDB successful")
     })
 
     mongoose.connection.on("error", (err)=>{
